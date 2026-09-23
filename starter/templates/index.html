@@ -7,12 +7,37 @@
 </head>
 <body>
   <h1>Sudoku Game</h1>
+  <div class="game-settings">
+    <label for="player-name">Name</label>
+    <input id="player-name" type="text" maxlength="30" placeholder="Player name">
+    <label for="difficulty">Difficulty</label>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+    <span>Time: <strong id="timer">00:00</strong></span>
+  </div>
   <div id="sudoku-board"></div>
   <div class="controls">
     <button id="new-game">New Game</button>
     <button id="check-solution">Check Solution</button>
+    <button id="hint">Hint</button>
+    <button id="leaderboard">Top 10</button>
     <span id="message"></span>
   </div>
+  <dialog id="leaderboard-modal">
+    <div class="modal-header">
+      <h2>Top 10 Fastest Times</h2>
+      <button id="close-leaderboard" type="button" aria-label="Close leaderboard">Close</button>
+    </div>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Player</th><th>Time</th><th>Difficulty</th><th>Hints</th></tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+  </dialog>
   <script src="/static/main.js"></script>
 </body>
 </html>

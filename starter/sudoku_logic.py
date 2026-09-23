@@ -39,14 +39,63 @@ def fill_board(board):
                 return False
     return True
 
+
+def count_solutions(board):
+    """Count Sudoku solutions, stopping once more than one is found."""
+    for row in range(SIZE):
+        for col in range(SIZE):
+            value = board[row][col]
+            if value != EMPTY:
+                board[row][col] = EMPTY
+                valid = 1 <= value <= SIZE and is_safe(board, row, col, value)
+                board[row][col] = value
+                if not valid:
+                    return 0
+
+    def count_from_current_state():
+        empty_cell = None
+        for row in range(SIZE):
+            for col in range(SIZE):
+                if board[row][col] == EMPTY:
+                    empty_cell = (row, col)
+                    break
+            if empty_cell is not None:
+                break
+
+        if empty_cell is None:
+            return 1
+
+        row, col = empty_cell
+        solution_count = 0
+        for candidate in range(1, SIZE + 1):
+            if is_safe(board, row, col, candidate):
+                board[row][col] = candidate
+                solution_count += count_from_current_state()
+                board[row][col] = EMPTY
+                if solution_count > 1:
+                    return solution_count
+
+        return solution_count
+
+    return count_from_current_state()
+
+
+def has_unique_solution(board):
+    return count_solutions(board) == 1
+
+
 def remove_cells(board, clues):
-    attempts = SIZE * SIZE - clues
-    while attempts > 0:
-        row = random.randrange(SIZE)
-        col = random.randrange(SIZE)
-        if board[row][col] != EMPTY:
-            board[row][col] = EMPTY
-            attempts -= 1
+    cells = [(row, col) for row in range(SIZE) for col in range(SIZE)]
+    random.shuffle(cells)
+
+    for row, col in cells:
+        if sum(cell != EMPTY for row in board for cell in row) <= clues:
+            break
+
+        value = board[row][col]
+        board[row][col] = EMPTY
+        if count_solutions(board) != 1:
+            board[row][col] = value
 
 def generate_puzzle(clues=35):
     board = create_empty_board()
