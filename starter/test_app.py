@@ -74,3 +74,42 @@ def test_validator_rejects_duplicate_in_3x3_grid():
     board[1][1] = 7
 
     assert not sudoku_logic.is_safe(board, 2, 2, 7)
+def test_check_marks_empty_cells_as_incorrect(client):
+    response = client.get('/new?difficulty=easy')
+    assert response.status_code == 200
+
+    data = response.get_json()
+    puzzle = data['puzzle']
+
+    board = [row[:] for row in puzzle]
+
+    response = client.post(
+        '/check',
+        json={'board': board}
+    )
+
+    assert response.status_code == 200
+
+    result = response.get_json()
+    incorrect = result['incorrect']
+
+    empty_cells = [
+        [row, column]
+        for row in range(9)
+        for column in range(9)
+        if puzzle[row][column] == 0
+    ]
+
+    assert empty_cells
+    assert all(cell in incorrect for cell in empty_cells)
+
+
+def test_check_rejects_invalid_board(client):
+    client.get('/new?difficulty=easy')
+
+    response = client.post(
+        '/check',
+        json={'board': [[0]]}
+    )
+
+    assert response.status_code == 400

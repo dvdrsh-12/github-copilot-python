@@ -30,7 +30,37 @@
         --hint-color: #fff3a3;
     }
 }
+/* Manually selected light theme */
+body:not(.dark-mode) {
+    --page-background: #f4f4f4;
+    --text-color: #333333;
+    --board-background: #ffffff;
+    --cell-background: #fafafa;
+    --block-background: #eaf2f8;
+    --grid-line: #bbbbbb;
+    --box-line: #333333;
+    --focus-background: #e0f7fa;
+    --prefilled-background: #e0e0e0;
+    --incorrect-background: #ffcdd2;
+    --hint-background: #fff3cd;
+    --hint-color: #8a5a00;
+}
 
+/* Manually selected dark theme */
+body.dark-mode {
+    --page-background: #121212;
+    --text-color: #f5f5f5;
+    --board-background: #1e1e1e;
+    --cell-background: #242424;
+    --block-background: #303b45;
+    --grid-line: #777777;
+    --box-line: #ffffff;
+    --focus-background: #164e63;
+    --prefilled-background: #4a4a4a;
+    --incorrect-background: #b91c1c;
+    --hint-background: #66551a;
+    --hint-color: #fff3a3;
+}
 body {
     font-family: Arial, sans-serif;
     background: var(--page-background);
@@ -74,6 +104,7 @@ select {
     border: 4px solid var(--box-line);
     background: var(--board-background);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 100%;
 }
 
 .sudoku-row {
@@ -113,6 +144,28 @@ select {
 
 .sudoku-cell.incorrect {
     background: var(--incorrect-background);
+    color: #000000;
+    border: 2px solid #b91c1c;
+    font-weight: bold;
+}
+
+.sudoku-cell.invalid-entry {
+    background: #ff8a80;
+    color: #000000;
+    border: 3px solid #d50000;
+    font-weight: bold;
+}
+
+body.dark-mode .sudoku-cell.incorrect {
+    background: #b91c1c;
+    color: #ffffff;
+    border: 2px solid #fecaca;
+}
+
+body.dark-mode .sudoku-cell.invalid-entry {
+    background: #b91c1c;
+    color: #ffffff;
+    border: 3px solid #ff8a80;
 }
 
 .sudoku-cell.hint {
@@ -177,7 +230,7 @@ dialog::backdrop {
 
 .modal-header h2 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 table {
@@ -188,16 +241,44 @@ table {
 
 th,
 td {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--grid-line);
     padding: 8px 12px;
     text-align: left;
+    color: var(--text-color);
 }
 
 th {
-    color: #555;
+    color: var(--text-color);
+}
+#theme-toggle {
+    background: #455a64;
+    color: #ffffff;
 }
 
+#theme-toggle:hover {
+    background: #263238;
+}
+
+body.dark-mode #theme-toggle {
+    background: #f5f5f5;
+    color: #222222;
+}
+
+body.dark-mode #theme-toggle:hover {
+    background: #dddddd;
+}
 @media (max-width: 480px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .game-settings {
+        padding: 0 10px;
+    }
+
+    #theme-toggle {
+        margin-top: 4px;
+    }
     .game-settings {
         flex-wrap: wrap;
     }

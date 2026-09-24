@@ -42,17 +42,31 @@ def new_game():
 
 @app.route('/check', methods=['POST'])
 def check_solution():
-    data = request.json
+    data = request.get_json(silent=True) or {}
     board = data.get('board')
     solution = CURRENT.get('solution')
+
     if solution is None:
-        return jsonify({'error': 'No game in progress'}), 400
+        return jsonify({
+            'error': 'No game in progress'
+        }), 400
+
+    if not is_valid_board(board):
+        return jsonify({
+            'error': 'Board must be a 9x9 grid of numbers'
+        }), 400
+
     incorrect = []
-    for i in range(SIZE):
-        for j in range(SIZE):
-            if board[i][j] != solution[i][j]:
-                incorrect.append([i, j])
-    return jsonify({'incorrect': incorrect})
+
+    for row in range(SIZE):
+        for column in range(SIZE):
+            if board[row][column] != solution[row][column]:
+                incorrect.append([row, column])
+
+    return jsonify({
+        'incorrect': incorrect,
+        'complete': len(incorrect) == 0
+    })
 
 
 @app.route('/hint', methods=['POST'])
